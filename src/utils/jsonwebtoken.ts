@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import CustomError from "./customError";
 import { ObjectId } from "mongoose";
+import { Response } from "express";
 
 interface Itoken {
     userId:ObjectId,
@@ -29,7 +30,7 @@ export const verifyAccessToken = (token: string) : Itoken => {
     }
 };
 
-export const verifyRefreshToken = (token: string): Itoken => {
+export const verifyRefreshToken = (token: string) : Itoken => {
     const JWT_SECRET_KEY = config.JWT_SECRET_KEY as string;
     try{
         return jwt.verify(token, JWT_SECRET_KEY) as Itoken;
@@ -37,3 +38,20 @@ export const verifyRefreshToken = (token: string): Itoken => {
         throw new CustomError('Invalid or expired refresh token',401);
     }
 };
+
+export const sentRefreshToken  = (res:Response,token:string) : void => {
+    res.cookie('refreshToken',token,{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', 
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+};
+
+export const clearRefreshToken = (req: Request, res: Response): void => {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+  };

@@ -1,13 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { IFreelancer } from '../interface/freelancerInterface';
 
-export interface IFreelancer extends Document {
-  email: string;
-  password: string;
-  profileImg: string;
-  googleId?: string;
-  skills: string[];
-  experience: string;
-}
+
 
 const FreelancerSchema : Schema = new Schema(
   {
@@ -17,6 +11,7 @@ const FreelancerSchema : Schema = new Schema(
     googleId: { type: String },
     skills: { type: [String], required: true },
     experience: { type: String, required: true },
+    role: {type: String, required: true, default:"freelancer"},
   },
   { timestamps: true }
 );
