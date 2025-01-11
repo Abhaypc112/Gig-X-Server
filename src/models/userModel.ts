@@ -7,6 +7,7 @@ const UserSchema : Schema = new Schema (
         name: { type: String, required: true},
         password: { type: String, required: true },
         profileImg: { type: String},
+        isBlock: { type: Boolean, default:false},
         otp: { type: String},
         googleId: { type: String },
         role: {type: String, required: true, default:"user"},

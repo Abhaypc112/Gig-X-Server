@@ -5,6 +5,7 @@ export interface IAdmin extends Document {
   name: string;
   password: string;
   profileImg: string;
+  isBlock:boolean;
   googleId?: string;
   role: string;
 }

@@ -24,8 +24,9 @@ export const generateRefreshToken = (userId: ObjectId, role: string) : string =>
 export const verifyAccessToken = (token: string) : Itoken => {
     const JWT_SECRET_KEY = config.JWT_SECRET_KEY as string;
     try{
-        return jwt.verify(token, JWT_SECRET_KEY) as Itoken;
-    }catch{
+        const verify = jwt.verify(token, JWT_SECRET_KEY) as Itoken;
+        return verify
+    }catch(error){
         throw new CustomError('Invalid or expired access token',401);
     }
 };

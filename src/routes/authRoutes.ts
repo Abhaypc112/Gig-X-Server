@@ -1,5 +1,5 @@
 import express,{ Request, Response, Router } from 'express';
-import { adminLogin, freelancerLogin, otpGeneration, refreshToken, userLogin, userSignup ,googleCallback} from '../controllers/authControllers';
+import { freelancerLogin, otpGeneration, refreshToken, userLogin, userSignup ,googleCallback} from '../controllers/authControllers';
 import passport from 'passport';
 
 const authRouter : Router = express.Router();

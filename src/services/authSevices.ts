@@ -40,6 +40,7 @@ export const doLogin = async (res:Response, userData:IUser) : Promise <object> =
     if(!user) throw new CustomError("Invalid email or password !",401);
     const verifyPassword = await bcrypt.compare(password,user.password);
     if(!verifyPassword) throw new CustomError("Incorrect password !",401);
+    if(user.isBlock) throw new CustomError("Blocked Contact Admin !",401);
     const accessToken = generateAccessToken(user._id, user.role);
     const refreshToken = generateRefreshToken(user._id,user.role);
     sentRefreshToken(res,refreshToken);

@@ -6,6 +6,7 @@ const AdminSchema : Schema = new Schema(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profileImg: { type: String},
+    isBlock: { type: Boolean, default:false},
     googleId: { type: String },
     role: { type: String, required: true, default: 'admin' },
   },

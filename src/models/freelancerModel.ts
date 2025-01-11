@@ -9,6 +9,7 @@ const FreelancerSchema : Schema = new Schema(
     name: { type: String, required: true},
     password: { type: String, required: true },
     profileImg: { type: String},
+    isBlock: { type: Boolean, default:false},
     googleId: { type: String },
     skills: { type: [String] },
     experience: { type: String },
