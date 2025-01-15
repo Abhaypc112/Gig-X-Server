@@ -1,41 +1,28 @@
-import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+dotenv.config();
 
-(async function () {
-    // Configuration
-    cloudinary.config({
-        cloud_name: 'dotpzrvnf',
-        api_key: '977555224713531',
-        api_secret: 'wZb-E29soPZYi6njmb12MHdsbW0' // Click 'View API Keys' above to copy your API secret
-    });
+interface ExtendedParams {
+    folder?: string;
+    allowed_formats?: string[];
+  }
 
-    // Upload an image
-    try {
-        const uploadResult: UploadApiResponse = await cloudinary.uploader.upload(
-            "imgfile", {
-                public_id: 'shoes',
-            }
-        );
+cloudinary.config({
+    cloud_name : process.env.CLOUD_NAME,
+    api_key : process.env.CLOUD_API_KEY,
+    api_secret : process.env.CLOUD_SECRET_KEY,
+  });
+  
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'gig-x', 
+    allowed_formats: ['jpeg', 'png', 'jpg'],
+  }as ExtendedParams,
+});
 
-        console.log(uploadResult);
+const upload = multer({ storage });
 
-        // Optimize delivery by resizing and applying auto-format and auto-quality
-        const optimizeUrl: string = cloudinary.url('shoes', {
-            fetch_format: 'auto',
-            quality: 'auto'
-        });
-
-        console.log(optimizeUrl);
-
-        // Transform the image: auto-crop to square aspect ratio
-        const autoCropUrl: string = cloudinary.url('shoes', {
-            crop: 'auto',
-            gravity: 'auto',
-            width: 500,
-            height: 500,
-        });
-
-        console.log(autoCropUrl);
-    } catch (error) {
-        console.error('Upload error:', error);
-    }
-})();
+export default upload;

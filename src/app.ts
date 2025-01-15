@@ -4,10 +4,9 @@ import cors from 'cors';
 import authRouter from './routes/authRoutes';
 import { errorHandler } from './middlewares/errorMiddleware';
 import cookieParser from 'cookie-parser';
-import { config } from './config/config';
 import passport from 'passport';
-import session from 'express-session';
 import adminRouter from './routes/adminRoutes';
+import freelancerRouter from './routes/freelancerRoutes';
 
 app.use(express.json());
 app.use(cookieParser())
@@ -22,6 +21,7 @@ app.use(cors({
 
 app.use('/api',authRouter);
 app.use('/api',adminRouter);
+app.use('/api',freelancerRouter);
 
 app.use(errorHandler);
 

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import catchAsync from "../utils/catchAsync";
 import { generateOtp, sendOtpEmail } from "../utils/otpGenerator";
 import { doLogin, doSignupUser, tokenGenerator } from "../services/authSevices";
-import { generateAccessToken } from "../utils/jsonwebtoken";
+import *as authService from '../services/authSevices';
 
 export const otpGeneration = catchAsync(async (req:Request,res:Response) => {
     const  {email} = req.body;
@@ -25,8 +25,9 @@ export const refreshToken = catchAsync(async (req:Request,res:Response) => {
     const token = await tokenGenerator(refreshToken);
     res.status(200).json({message:"Success",token});
 });
-export const adminLogin = catchAsync(async (req:Request,res:Response) => {
-
+export const userLogOut = catchAsync(async (req:Request,res:Response) => {
+    const logOut = await authService.userLogOut(req,res)
+    res.status(200).json({message:"Success",logOut});
 });
 export const freelancerLogin = catchAsync(async (req:Request,res:Response) => {
 

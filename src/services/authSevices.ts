@@ -2,10 +2,10 @@ import bcrypt from 'bcrypt';
 import CustomError from "../utils/customError";
 import { IUser } from '../interface/userInterface';
 import User from '../models/userModel';
-import { generateAccessToken, generateRefreshToken, sentRefreshToken, verifyRefreshToken } from '../utils/jsonwebtoken';
+import { clearRefreshToken, generateAccessToken, generateRefreshToken, sentRefreshToken, verifyRefreshToken } from '../utils/jsonwebtoken';
 import Freelancer from '../models/freelancerModel';
 import Admin from '../models/adminModel';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IFreelancer } from '../interface/freelancerInterface';
 
 export const doSignupUser = async (res:Response, userData : IUser | IFreelancer) : Promise <object> => {
@@ -56,4 +56,7 @@ export const tokenGenerator = async (refToken:string) : Promise <object> => {
     if(!payload.userId || !payload.role ) throw new CustomError("Unauthorized !",401);
     const newAccessToken = generateAccessToken(payload.userId,payload.role);
     return {accessToken:newAccessToken}
+}
+export const userLogOut = async (req:Request ,res:Response) => {
+    return clearRefreshToken(req,res)
 }

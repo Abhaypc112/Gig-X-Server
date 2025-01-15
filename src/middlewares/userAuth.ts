@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import catchAsync from "../utils/catchAsync";
 import { config } from "../config/config";
 import CustomError from "../utils/customError";
 
-export const userAuth = catchAsync((req: Request, res: Response, next: NextFunction) => {
+export const userAuth = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers["authorization"]?.split(" ")[1];
   if (!token) throw new CustomError("Access denied, token missing!",400);
   const JWT_SECRET_KEY = config.JWT_SECRET_KEY;
@@ -20,4 +19,4 @@ export const userAuth = catchAsync((req: Request, res: Response, next: NextFunct
   }catch(error){
       res.status(401).json({ message: 'Invalid token' });
   }
-);
+}

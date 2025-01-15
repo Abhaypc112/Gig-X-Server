@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 import CustomError from "./customError";
 import { ObjectId } from "mongoose";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 interface Itoken {
     userId:ObjectId,
