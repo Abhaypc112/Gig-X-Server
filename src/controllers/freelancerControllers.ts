@@ -9,7 +9,6 @@ export const freelancerCreateGig = catchAsync(async(req:Request,res:Response) =>
     const uploadedFile = req.files as any
     const gigImages = await uploadedFile.map((image : any) => image.path)
     const gigData = {...data,gigImages,gigOwner:userId}
-    console.log(gigData)
     const gig = await freelancerServices.freelancerCreateGig(gigData)
     res.status(200).json(gig);
 });
