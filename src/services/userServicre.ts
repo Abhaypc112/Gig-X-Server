@@ -5,7 +5,7 @@ import Order from "../models/orderModel"
 import CustomError from "../utils/customError"
 
 export const getAllgigs = async (): Promise <object> =>  {
-    const gig = await Gig.find().populate({
+    const gig = await Gig.find({isBlock:false}).populate({
         path: 'gigOwner',
         model:'Freelancer',
         select: `name _id role`
@@ -17,19 +17,19 @@ export const getAllCategorys = async (): Promise <object> =>  {
     return category;
 }
 export const createOrder = async (orderData : IOrder): Promise <any> =>  {
-    const {gigId,userId,paymentStatus} = orderData;
+    const {gigId,userId} = orderData;
     const orderExist = await Order.find({userId,gigId})
     const pendingOrder = orderExist.find((order)=>order.paymentStatus === false || order.orderStatus === false);
     if(pendingOrder) throw new CustomError("Order already exist !",401);
     const order = await (await Order.create(orderData)).populate({
         path: 'gigId',
         model:'Gig',
-        select: `gigName _id gigImages gigDescription`,
+        select: `gigName _id gigImages gigDescription userId`,
         populate:{
             path: 'gigOwner',
             model:'Freelancer',
             select: `_id name email`
-        }
+        },
     })
     return order;
 }

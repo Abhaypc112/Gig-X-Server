@@ -20,8 +20,6 @@ export const doSignupUser = async (res:Response, userData : IUser | IFreelancer)
     const hashPassword = await bcrypt.hash(password,10);
     if(role === "user") user = await User.create({email,name,password:hashPassword});
     if(role === "freelancer") user = await Freelancer.create({email,name,password:hashPassword});
-    console.log(user);
-    
     if(!user) throw new CustomError("Signup faild !",400);
     const accessToken = generateAccessToken(user._id, user.role);
     const refreshToken = generateRefreshToken(user._id,user.role);
@@ -29,14 +27,13 @@ export const doSignupUser = async (res:Response, userData : IUser | IFreelancer)
     return {
         user:{
             name:user.name,
+            profileImg:user.profileImg,
             email:user.email,
             role:user.role,
         },accessToken}
 }
-export const googleSignUp = async (res:Response, credentialResponse : any, userData : IUser | IFreelancer) : Promise <any> => {
-    const role = userData.role;
-    console.log(userData)
-          try {
+export const googleAuth = async (res:Response, credentialResponse : any, option : string) : Promise <any> => {
+  const role = option;
             const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
             if (!credentialResponse) {
               throw new CustomError("No google credentials provided!", 400);
@@ -54,33 +51,30 @@ export const googleSignUp = async (res:Response, credentialResponse : any, userD
             const { email,name } = payload;
             let existUser,user;
             let accessToken,refreshToken;
-            if(role === "user") existUser = await User.findOne({email});
-            if(role === "freelancer") existUser = await Freelancer.findOne({email});
+            existUser = await User.findOne({email});
+            if(!existUser) existUser = await Freelancer.findOne({email});
             if(existUser) {
                 accessToken = generateAccessToken(existUser._id, existUser.role);
                 refreshToken = generateRefreshToken(existUser._id,existUser.role);
                 sentRefreshToken(res,refreshToken);
+                user = existUser;
+            }else{
+              if(role === "user") user = await User.create({email,name,role});
+              if(role === "freelancer") user = await Freelancer.create({email,name,role});
+              if(!user) throw new CustomError("Auth faild !",400);
+              accessToken = generateAccessToken(user._id, user.role);
+              refreshToken = generateRefreshToken(user._id,user.role);
+              sentRefreshToken(res,refreshToken);
             }
-            if(role === "user") user = await User.create({email,name});
-            if(role === "freelancer") user = await Freelancer.create({email,name});
-            if(!user) throw new CustomError("Signup faild !",400);
-            accessToken = generateAccessToken(user._id, user.role);
-            refreshToken = generateRefreshToken(user._id,user.role);
-            sentRefreshToken(res,refreshToken);
+            if(!user) throw new CustomError("Auth faild !",400);
+            console.log(user)
             return {
             user:{
                 name:user.name,
+                profileImg:user.profileImg,
                 email:user.email,
                 role:user.role,
             },accessToken}
-            
-          } catch (error : any) {
-            res.status(200).json({
-              status: false,
-              message: "Error occured!",
-              errorMessage: error.message
-            });
-          }  
 }
 export const doLogin = async (res:Response, userData:IUser) : Promise <object> => {
     const {email,password} = userData;
@@ -97,6 +91,7 @@ export const doLogin = async (res:Response, userData:IUser) : Promise <object> =
     return {
         user:{
             name:user.name,
+            profileImg:user.profileImg,
             email:user.email,
             role:user.role,
         },accessToken}

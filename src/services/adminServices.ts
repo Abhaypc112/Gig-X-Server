@@ -5,6 +5,7 @@ import { IUser } from "../interface/userInterface";
 import Gig from "../models/gigModel";
 import { ICategory } from "../interface/categoryInerface";
 import Category from "../models/categoryModel";
+import Order from "../models/orderModel";
 
 export const getAllUsers = async () : Promise <object> => {
     const users = await User.find({}," name email role profileImg isBlock").lean();
@@ -42,3 +43,30 @@ export const addCategory = async (categoryData : ICategory): Promise <object> =>
     if(!category) throw new CustomError("Category not Created !",400);
     return await category.save();
 }
+export const adminGetAllOrders = async (): Promise<object> => {
+    const orders = await Order.find()
+      .populate([
+        {
+          path: "gigId",
+          model: "Gig",
+          select: "gigName _id gigImages gigDescription",
+          populate: [
+            {
+              path: "gigOwner",
+              model: "Freelancer",
+              select: "_id name email",
+            },
+          ],
+        },
+        {
+          path: "userId",
+          model: "User",
+          select: "_id name email phone address",
+        },
+      ]).exec();
+  
+    if (!orders) throw new CustomError("Orders not Created!", 400);
+  
+    return orders;
+  };
+  

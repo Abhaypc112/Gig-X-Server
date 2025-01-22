@@ -25,3 +25,7 @@ export const addCategory = catchAsync(async(req:Request,res:Response) => {
     const category = await adminServices.addCategory(req.body);
     res.json({message:"Success",category})
 });
+export const adminGetAllOrders = catchAsync(async(req:Request,res:Response) => {
+    const orders = await adminServices.adminGetAllOrders();
+    res.json({message:"Success",orders})
+});
