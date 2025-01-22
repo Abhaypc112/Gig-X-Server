@@ -11,9 +11,12 @@ export const otpGeneration = catchAsync(async (req:Request,res:Response) => {
     res.json({message:"Success",data:{email,otp}})
 });
 export const userSignup = catchAsync(async (req:Request,res:Response) => {
-    console.log(req.body,"cont");
-    
     const userData = await doSignupUser(res,req.body);
+    res.status(200).json({message:"Success",userData});
+});
+export const gooleSignup = catchAsync(async (req:Request,res:Response) => {
+    const {credentialResponse,signupData} = req.body;
+    const userData = await authService.googleSignUp(res,credentialResponse,signupData);
     res.status(200).json({message:"Success",userData});
 });
 export const userLogin = catchAsync(async (req:Request,res:Response) => {
@@ -32,12 +35,3 @@ export const userLogOut = catchAsync(async (req:Request,res:Response) => {
 export const freelancerLogin = catchAsync(async (req:Request,res:Response) => {
 
 });
-export const googleCallback = (req: Request, res: Response) => {
-    const user = req.user;
-    if (!user) {
-      return res.status(401).json({ message: "Authentication failed" });
-    }
-    console.log(user);
-    
-    res.redirect(`http://localhost:5173/login`);
-  };

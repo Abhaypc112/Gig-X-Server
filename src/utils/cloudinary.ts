@@ -19,7 +19,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'gig-x', 
-    allowed_formats: ['jpeg', 'png', 'jpg'],
+    allowed_formats: ['jpeg', 'png', 'jpg',"WEBP"],
   }as ExtendedParams,
 });
 

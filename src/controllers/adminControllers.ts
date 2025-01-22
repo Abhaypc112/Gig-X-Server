@@ -4,19 +4,24 @@ import * as adminServices from '../services/adminServices';
 
 export const getAllUsers = catchAsync(async(req:Request,res:Response) => {
     const users = await adminServices.getAllUsers();
-    res.send(users)
+    res.json({message:"Success",users})
 });
 export const blockUser = catchAsync(async(req:Request,res:Response) => {
     const {userId} = req.body;
-    const users = await adminServices.blockUser(userId);
-    res.send(users)
+    const user = await adminServices.blockUser(userId);
+    res.json({message:"Success",user})
 });
 export const getAllGigs = catchAsync(async(req:Request,res:Response) => {
-    const users = await adminServices.getAllgigs();
-    res.send(users)
+    const gigs = await adminServices.getAllgigs();
+    res.json({message:"Success",gigs})
 });
 export const blockGig = catchAsync(async(req:Request,res:Response) => {
     const {gigId} = req.body;
     const gig = await adminServices.blockGig(gigId);
-    res.send(gig)
+    console.log(gig)
+    res.json({message:"Success",gig})
+});
+export const addCategory = catchAsync(async(req:Request,res:Response) => {
+    const category = await adminServices.addCategory(req.body);
+    res.json({message:"Success",category})
 });

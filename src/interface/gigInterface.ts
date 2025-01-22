@@ -20,7 +20,7 @@ export interface IGig extends Document {
     _id?:ObjectId;
     gigName?:string;
     gigDescription?:string;
-    gigOwner?:string;
+    gigOwner?:ObjectId;
     gigCategory?:string;
     gigImages?:string[];
     gigPricing?:IGigPricing;

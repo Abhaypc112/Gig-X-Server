@@ -7,6 +7,7 @@ import Freelancer from '../models/freelancerModel';
 import Admin from '../models/adminModel';
 import { Request, Response } from 'express';
 import { IFreelancer } from '../interface/freelancerInterface';
+import { OAuth2Client } from 'google-auth-library';
 
 export const doSignupUser = async (res:Response, userData : IUser | IFreelancer) : Promise <object> => {
     const {email,name, password, role} = userData;
@@ -31,6 +32,55 @@ export const doSignupUser = async (res:Response, userData : IUser | IFreelancer)
             email:user.email,
             role:user.role,
         },accessToken}
+}
+export const googleSignUp = async (res:Response, credentialResponse : any, userData : IUser | IFreelancer) : Promise <any> => {
+    const role = userData.role;
+    console.log(userData)
+          try {
+            const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+            if (!credentialResponse) {
+              throw new CustomError("No google credentials provided!", 400);
+            }
+        
+            // Verify Google token
+            const ticket = await client.verifyIdToken({
+              idToken: credentialResponse.credential,
+              audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            // Get payload from verified token
+            const payload = ticket.getPayload() as any;
+        
+            // Now we can trust this data as it's verified by Google
+            const { email,name } = payload;
+            let existUser,user;
+            let accessToken,refreshToken;
+            if(role === "user") existUser = await User.findOne({email});
+            if(role === "freelancer") existUser = await Freelancer.findOne({email});
+            if(existUser) {
+                accessToken = generateAccessToken(existUser._id, existUser.role);
+                refreshToken = generateRefreshToken(existUser._id,existUser.role);
+                sentRefreshToken(res,refreshToken);
+            }
+            if(role === "user") user = await User.create({email,name});
+            if(role === "freelancer") user = await Freelancer.create({email,name});
+            if(!user) throw new CustomError("Signup faild !",400);
+            accessToken = generateAccessToken(user._id, user.role);
+            refreshToken = generateRefreshToken(user._id,user.role);
+            sentRefreshToken(res,refreshToken);
+            return {
+            user:{
+                name:user.name,
+                email:user.email,
+                role:user.role,
+            },accessToken}
+            
+          } catch (error : any) {
+            res.status(200).json({
+              status: false,
+              message: "Error occured!",
+              errorMessage: error.message
+            });
+          }  
 }
 export const doLogin = async (res:Response, userData:IUser) : Promise <object> => {
     const {email,password} = userData;
@@ -60,3 +110,4 @@ export const tokenGenerator = async (refToken:string) : Promise <object> => {
 export const userLogOut = async (req:Request ,res:Response) => {
     return clearRefreshToken(req,res)
 }
+

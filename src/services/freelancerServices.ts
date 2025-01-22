@@ -1,5 +1,6 @@
 import { IGig } from "../interface/gigInterface";
 import { IUser } from "../interface/userInterface";
+import Category from "../models/categoryModel";
 import Gig from "../models/gigModel";
 import CustomError from "../utils/customError";
 
@@ -24,4 +25,14 @@ export const freelancerEditGig = async (gigId : string, updatedData : IGig): Pro
     const gig = await Gig.findById(updatedGig._id);
     if(!gig) throw new CustomError("Gig not fount !",400);
     return gig
+}
+export const freelancerDeleteGig = async (gigId : string): Promise <object> =>  {
+    const gig = await Gig.findByIdAndDelete(gigId);
+    if(!gig) throw new CustomError("Gig not fount !",400);
+    return gig
+}
+export const freelancerGetAllCaregory = async (): Promise <object> =>  {
+    const category = await Category.find();
+    if(!category) throw new CustomError("Category not fount !",400);
+    return category
 }
