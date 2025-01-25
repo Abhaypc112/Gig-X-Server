@@ -11,8 +11,6 @@ import { OAuth2Client } from 'google-auth-library';
 
 export const doSignupUser = async (res:Response, userData : IUser | IFreelancer) : Promise <object> => {
     const {email,name, password, role} = userData;
-    console.log(userData);
-    
     let existUser,user;
     if(role === "user") existUser = await User.findOne({email});
     if(role === "freelancer") existUser = await Freelancer.findOne({email});
@@ -46,9 +44,8 @@ export const googleAuth = async (res:Response, credentialResponse : any, option 
             });
             // Get payload from verified token
             const payload = ticket.getPayload() as any;
-        
             // Now we can trust this data as it's verified by Google
-            const { email,name } = payload;
+            const { email,name,picture } = payload;
             let existUser,user;
             let accessToken,refreshToken;
             existUser = await User.findOne({email});
@@ -59,15 +56,14 @@ export const googleAuth = async (res:Response, credentialResponse : any, option 
                 sentRefreshToken(res,refreshToken);
                 user = existUser;
             }else{
-              if(role === "user") user = await User.create({email,name,role});
-              if(role === "freelancer") user = await Freelancer.create({email,name,role});
+              if(role === "user") user = await User.create({email,name,role,profileImg:picture});
+              if(role === "freelancer") user = await Freelancer.create({email,name,role,profileImg:picture});
               if(!user) throw new CustomError("Auth faild !",400);
               accessToken = generateAccessToken(user._id, user.role);
               refreshToken = generateRefreshToken(user._id,user.role);
               sentRefreshToken(res,refreshToken);
             }
             if(!user) throw new CustomError("Auth faild !",400);
-            console.log(user)
             return {
             user:{
                 name:user.name,

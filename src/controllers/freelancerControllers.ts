@@ -3,10 +3,8 @@ import catchAsync from "../utils/catchAsync";
 import * as freelancerServices from '../services/freelancerServices';
 
 export const freelancerCreateGig = catchAsync(async(req:Request,res:Response) => {
-    console.log(req.body)
     const {userId} = req.user as any;
     const data = JSON.parse(req.body.data);
-    console.log(data)
     if(!req.files) res.status(400).json({ message: 'No file uploaded' });
     const uploadedFile = req.files as any
     const gigImages = await uploadedFile.map((image : any) => image.path)
@@ -27,7 +25,6 @@ export const freelancerUpdateGigStataus = catchAsync(async(req:Request,res:Respo
 export const freelancerEditGig = catchAsync(async(req:Request,res:Response) => {
     const data = JSON.parse(req.body.data);
     const gigId = data.gigId;
-    console.log(req.files)
     let updatedData ;
     if(req.files?.length || 0 > 0){
         const uploadedFile = req.files as any
@@ -48,3 +45,8 @@ export const  freelancerGetAllCaregory = catchAsync(async(req:Request,res:Respon
     const category = await freelancerServices.freelancerGetAllCaregory()
     res.status(200).json(category);
 });
+// export const  freelancerGetOrdersById = catchAsync(async(req:Request,res:Response) => {
+//     const {userId} = req.user as any
+//     const category = await freelancerServices.freelancerGetOrdersById(userId)
+//     res.status(200).json(category);
+// });

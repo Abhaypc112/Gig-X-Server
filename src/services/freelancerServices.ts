@@ -36,3 +36,8 @@ export const freelancerGetAllCaregory = async (): Promise <object> =>  {
     if(!category) throw new CustomError("Category not fount !",400);
     return category
 }
+// export const freelancerGetOrdersById = async (): Promise <object> =>  {
+//     const category = await Category.find();
+//     if(!category) throw new CustomError("Category not fount !",400);
+//     return category
+// }

@@ -41,8 +41,26 @@ export const blockGig = async (gigId : IUser): Promise <object> =>  {
 export const addCategory = async (categoryData : ICategory): Promise <object> =>  {
     const category = await Category.create(categoryData);
     if(!category) throw new CustomError("Category not Created !",400);
-    return await category.save();
+    return category;
 }
+export const editCategory = async (categoryId:string,categoryData : ICategory): Promise <object> =>  {
+    const editCategory = await Category.findByIdAndUpdate(categoryId,categoryData);
+    if(!editCategory) throw new CustomError("Category not Updated !",400);
+    const category = await Category.findById(editCategory._id)
+    if(!category) throw new CustomError("Category not Found !",400);
+    return category;
+}
+export const getAllCategory = async (): Promise <object> =>  {
+    const category = await Category.find();
+    if(!category) throw new CustomError("Category not Found !",400);
+    return category
+}
+export const deleteCategory = async (categoryId : string): Promise <object> =>  {
+    const category = await Category.findByIdAndDelete(categoryId);
+    if(!category) throw new CustomError("Category not deleted !",400);
+    return category
+}
+
 export const adminGetAllOrders = async (): Promise<object> => {
     const orders = await Order.find()
       .populate([

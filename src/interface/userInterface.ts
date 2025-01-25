@@ -6,7 +6,7 @@ export interface IUser extends Document {
     name:string,
     password: string,
     isBlock:boolean;
-    profileImg?: string,
+    profileImg : string,
     otp?: string,
     googleId?: string,
     role:string,

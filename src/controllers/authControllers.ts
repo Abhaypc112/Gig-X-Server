@@ -16,8 +16,7 @@ export const userSignup = catchAsync(async (req:Request,res:Response) => {
 });
 export const googleAuth = catchAsync(async (req:Request,res:Response) => {
     const {credentialResponse,option} = req.body;
-    console.log(req.body)
-    const userData = await authService.googleAuth(res,credentialResponse,option);
+    const userData = await authService.googleAuth(res,credentialResponse,option || "user");
     res.status(200).json({message:"Success",userData});
 });
 export const userLogin = catchAsync(async (req:Request,res:Response) => {

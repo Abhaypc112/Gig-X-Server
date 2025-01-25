@@ -8,11 +8,9 @@ import passport from 'passport';
 import adminRouter from './routes/adminRoutes';
 import freelancerRouter from './routes/freelancerRoutes';
 import userRouter from './routes/userRoutes';
-import { OAuth2Client } from 'google-auth-library';
-import CustomError from './utils/customError';
-import { config } from './config/config';
-import { userSignup } from './controllers/authControllers';
-
+import messageRouter from './routes/messageRoutes';
+import { Server } from 'socket.io';
+import http from "http";
 
 app.use(express.json());
 app.use(cookieParser())
@@ -23,46 +21,38 @@ app.use(cors({
     origin:"http://localhost:5173",
     credentials:true
   }));
-  app.use(passport.initialize());
 
 app.use('/api',authRouter);
 app.use('/api',adminRouter);
 app.use('/api',freelancerRouter);
 app.use('/api',userRouter);
+app.use('/api',messageRouter);
 
- 
-app.post("/api/auth/google", async (req, res) => {
-  try {
-    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "http://localhost:5173", // Frontend URL
+//     methods: ["GET", "POST"],
+//   },
+// });
 
-    const body = req.body;
-    console.log(body)
+// io.on("connection", (socket) => {
+//   console.log("New client connected");
 
-    if (!body) {
-      throw new CustomError("No google credentials provided!", 400);
-    }
+//   socket.on("joinRoom", ({ room }) => {
+//     socket.join(room);
+//     console.log(`User joined room: ${room}`);
+//   });
 
-    // Verify Google token
-    const ticket = await client.verifyIdToken({
-      idToken: body.credential,
-      audience: config.GOOGLE_CLIENT_ID,
-    });
+//   socket.on("chatMessage", (message) => {
+//     const { room, sender, receiver, content } = message;
+//     io.to(room).emit("message", { sender, receiver, content });
+//   });
 
-    // Get payload from verified token
-    const payload = ticket.getPayload() as any;
-
-    // Now we can trust this data as it's verified by Google
-    const {name,email,picture } = payload;
-    const userData ={name,email,picture} as any
-    userSignup(req,res,userData)
-  } catch (error : any) {
-    res.status(200).json({
-      status: false,
-      message: "Error occured!",
-      errorMessage: error.message
-    });
-  }
-});
+//   socket.on("disconnect", () => {
+//     console.log("Client disconnected");
+//   });
+// });
 
 
 app.use(errorHandler);
