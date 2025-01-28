@@ -3,7 +3,6 @@ import catchAsync from "../utils/catchAsync";
 import * as userServices from '../services/userServicre';
 import razorpay from "../utils/razorpay";
 import crypto from "crypto";
-import CustomError from "../utils/customError";
 
 export const userGetAllGigs = catchAsync(async(req:Request,res:Response) => {
     const gigs = await userServices.getAllgigs();
@@ -28,12 +27,11 @@ export const razorpayCreateOrder = catchAsync(async(req:Request,res:Response) =>
     const { amount, currency } = req.body;
 
     const options = {
-      amount: amount * 100, // Razorpay accepts amounts in paisa (smallest currency unit)
+      amount: amount * 100,
       currency: currency || "INR",
       receipt: `order_rcptid_${Date.now()}`,
     };
     const order = await razorpay.orders.create(options);
-    console.log(order)
     res.status(200).json(order);
 });
 export const razorpayVerification = catchAsync(async(req:Request,res:Response) => {

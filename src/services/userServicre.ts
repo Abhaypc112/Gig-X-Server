@@ -5,15 +5,19 @@ import Order from "../models/orderModel"
 import CustomError from "../utils/customError"
 
 export const getAllgigs = async (): Promise <object> =>  {
-    const gig = await Gig.find({isBlock:false}).populate({
+    const gig = await Gig.find({isBlock:false}).populate([{
         path: 'gigOwner',
         model:'Freelancer',
         select: `name _id role`
-    })
+    },
+        {
+            path: 'gigCategory',
+            model:'Category',
+    }])
     return gig
 }
 export const getAllCategorys = async (): Promise <object> =>  {
-    const category = await Category.find()
+    const category = await Category.find({isActive:true})
     return category;
 }
 export const createOrder = async (orderData : IOrder): Promise <any> =>  {

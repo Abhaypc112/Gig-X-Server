@@ -6,9 +6,11 @@ export interface IFreelancer extends Document {
     name:string;
     password: string;
     profileImg: string;
+    description:string;
+    languages:string[];
     isBlock:boolean;
     googleId?: string;
     skills: string[];
     experience: string;
-    role:string,
+    role:string;
   }

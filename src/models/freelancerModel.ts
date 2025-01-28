@@ -7,12 +7,14 @@ const FreelancerSchema : Schema = new Schema(
   {
     email: { type: String, required: true, unique: true },
     name: { type: String, required: true},
-    password: { type: String, },
+    password: { type: String },
     profileImg: { type: String},
     isBlock: { type: Boolean, default:false},
     googleId: { type: String },
     skills: { type: [String] },
+    languages: { type: [String] },
     experience: { type: String },
+    description: { type: String },
     role: {type: String, required: true, default:"freelancer"},
   },
   { timestamps: true }

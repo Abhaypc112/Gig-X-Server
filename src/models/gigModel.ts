@@ -20,7 +20,7 @@ const gigScheema : Schema = new Schema (
     {
         gigName:{type: String, required:true},
         gigOwner:{type:mongoose.Schema.Types.ObjectId, required:true},
-        gigCategory:{type: String, required:true},
+        gigCategory:{type:mongoose.Schema.Types.ObjectId, required:true},
         gigDescription:{type: String, required:true},
         gigImages:{type: [String], required:true},
         gigPricing:{type : gigPricingSchema, required:true},
