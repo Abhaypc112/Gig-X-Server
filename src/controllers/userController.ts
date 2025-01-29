@@ -52,3 +52,13 @@ export const razorpayVerification = catchAsync(async(req:Request,res:Response) =
     }
 });
 
+export const addGigRating = catchAsync(async(req:Request,res:Response) => {
+    const {userId} = req.user as any
+    const reviewData = {...req.body,userId}; 
+    const review = await userServices.addGigRating(reviewData);
+    res.status(200).json({message:"Success",review})
+});
+export const getGigReviewById = catchAsync(async(req:Request,res:Response) => {
+    const review = await userServices.getGigReviewById(req.params.gigId);
+    res.status(200).json({message:"Success",review})
+});
