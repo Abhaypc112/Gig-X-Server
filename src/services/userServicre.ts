@@ -1,9 +1,11 @@
 import { IOrder } from "../interface/orderInterface"
 import { IReview } from "../interface/ratingInterface"
+import { IUser } from "../interface/userInterface"
 import Category from "../models/categoryModel"
 import Gig from "../models/gigModel"
 import Order from "../models/orderModel"
 import Review from "../models/ratingModel"
+import User from "../models/userModel"
 import CustomError from "../utils/customError"
 
 export const getAllgigs = async (): Promise <object> =>  {
@@ -72,4 +74,14 @@ export const getGigReviewById = async (gidId:string): Promise <object> =>  {
     });
     if(!review) throw new CustomError("Review not Found !",400);
     return review; 
+}
+export const editUser = async (userId : string, updatedData : IUser): Promise <object> =>  {
+    const user = await User.findByIdAndUpdate(userId,updatedData);
+    if(!user) throw new CustomError("User not updated !",400);
+    return user; 
+}
+export const getUser = async (userId : string): Promise <object> =>  {
+    const user = await User.findById(userId);
+    if(!user) throw new CustomError("User not fonud !",400);
+    return user; 
 }

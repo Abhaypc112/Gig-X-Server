@@ -3,6 +3,7 @@ import catchAsync from "../utils/catchAsync";
 import * as userServices from '../services/userServicre';
 import razorpay from "../utils/razorpay";
 import crypto from "crypto";
+import { IUser } from "../interface/userInterface";
 
 export const userGetAllGigs = catchAsync(async(req:Request,res:Response) => {
     const gigs = await userServices.getAllgigs();
@@ -61,4 +62,17 @@ export const addGigRating = catchAsync(async(req:Request,res:Response) => {
 export const getGigReviewById = catchAsync(async(req:Request,res:Response) => {
     const review = await userServices.getGigReviewById(req.params.gigId);
     res.status(200).json({message:"Success",review})
+});
+export const editUser = catchAsync(async(req:Request,res:Response) => {
+    const {userId} = req.user as any
+    const profileImg = req.file?.path;
+    const {name} = req.body;
+    const updatedData = {profileImg,name} as IUser;
+    const user = await userServices.editUser(userId,updatedData);
+    res.status(200).json({message:"Success",user})
+});
+export const getUser = catchAsync(async(req:Request,res:Response) => {
+    const {userId} = req.user as any
+    const user = await userServices.getUser(userId);
+    res.status(200).json({message:"Success",user})
 });
