@@ -15,7 +15,7 @@ cloudinary.config({
     api_secret : process.env.CLOUD_SECRET_KEY,
   });
   
-const storage = new CloudinaryStorage({
+const storage = new CloudinaryStorage({ 
   cloudinary: cloudinary,
   params: {
     folder: 'gig-x', 

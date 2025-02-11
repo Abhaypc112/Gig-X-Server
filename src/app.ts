@@ -4,13 +4,15 @@ import cors from 'cors';
 import authRouter from './routes/authRoutes';
 import { errorHandler } from './middlewares/errorMiddleware';
 import cookieParser from 'cookie-parser';
-import passport from 'passport';
 import adminRouter from './routes/adminRoutes';
 import freelancerRouter from './routes/freelancerRoutes';
 import userRouter from './routes/userRoutes';
 import messageRouter from './routes/messageRoutes';
 import { Server } from 'socket.io';
+import chatRouter from './routes/chatRoutes';
 import http from "http";
+import { saveMessage } from './services/chatServices';
+import { IChat } from './interface/chatInterface';
 
 app.use(express.json());
 app.use(cookieParser())
@@ -27,14 +29,29 @@ app.use('/api',adminRouter);
 app.use('/api',freelancerRouter);
 app.use('/api',userRouter);
 app.use('/api',messageRouter);
+app.use('/api',chatRouter);
 
-// const server = http.createServer(app);
-// const io = new Server(server, {
-//   cors: {
-//     origin: "http://localhost:5173", // Frontend URL
-//     methods: ["GET", "POST"],
-//   },
-// });
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+  socket.on("sendMessage", async ({ senderId, receiverId, message }) => {
+    const chatData = {senderId, receiverId, message} as IChat
+    console.log(chatData,"set")
+    const savedMessage = await saveMessage(chatData);
+    io.emit("receiveMessage", savedMessage); // Broadcast to all users
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected:", socket.id);
+  });
+});
 
 // io.on("connection", (socket) => {
 //   console.log("New client connected");

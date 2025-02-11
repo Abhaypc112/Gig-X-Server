@@ -8,7 +8,7 @@ interface Itoken {
     userId:ObjectId,
     role?:string
 };
-
+ 
 export const generateAccessToken = (userId: ObjectId, role: string) : string => {
     const JWT_SECRET_KEY = config.JWT_SECRET_KEY as string;
     const payload = {userId,role} as Itoken;

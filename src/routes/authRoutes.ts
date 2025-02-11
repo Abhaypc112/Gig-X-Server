@@ -1,6 +1,5 @@
 import express,{ Request, Response, Router } from 'express';
 import { freelancerLogin, otpGeneration, refreshToken, userLogin, userSignup , userLogOut, googleAuth } from '../controllers/authControllers';
-import passport from 'passport';
 
 const authRouter : Router = express.Router();
 

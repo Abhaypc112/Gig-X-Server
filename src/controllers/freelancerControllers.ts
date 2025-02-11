@@ -55,7 +55,7 @@ export const  freelancerGetById = catchAsync(async(req:Request,res:Response) => 
     const {userId} = req.user as any
     const freelancer = await freelancerServices.freelancerGetById(userId)
     res.status(200).json(freelancer);
-});
+}); 
 export const  freelancerEditById = catchAsync(async(req:Request,res:Response) => {
     const profileImg = req.file?.path;
     const {userId} = req.user as any

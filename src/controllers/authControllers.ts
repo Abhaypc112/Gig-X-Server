@@ -5,9 +5,9 @@ import { doLogin, doSignupUser, tokenGenerator } from "../services/authSevices";
 import *as authService from '../services/authSevices';
 
 export const otpGeneration = catchAsync(async (req:Request,res:Response) => {
-    const  {email} = req.body;
+    const  {email} = req.body; 
     const otp = generateOtp();
-    await sendOtpEmail(email,otp);
+    await sendOtpEmail(email,otp); 
     res.json({message:"Success",data:{email,otp}})
 });
 export const userSignup = catchAsync(async (req:Request,res:Response) => {
