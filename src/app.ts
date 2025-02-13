@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(cors({
-    origin:"https://gig-x.netlify.app/",
+    origin:"https://gig-x.netlify.app",
     credentials:true
   }));
 
